@@ -1,0 +1,535 @@
+/*
+|--------------------------------------------------------------------------
+| CSS Variables for Easy Theming
+|--------------------------------------------------------------------------
+| Define key colors and sizes for better maintenance.
+*/
+:root {
+  /* Colors */
+  --color-primary: #10b981; /* Emerald 500 */
+  --color-primary-dark: #059669; /* Emerald 600 */
+  --color-primary-darker: #047857; /* Emerald 700 */
+  --color-text-primary: #1f2937; /* Gray 800 */
+  --color-text-secondary: #6b7280; /* Gray 500 */
+  --color-background-light: #f9fafb; /* Gray 50 */
+  --color-surface: white;
+  --color-border: #e5e7eb; /* Gray 200 */
+
+  /* Utility Colors */
+  --color-level-low: #22c55e; /* Green 500 */
+  --color-level-medium: #f59e0b; /* Amber 500 */
+  --color-level-high: #ef4444; /* Red 500 */
+  --color-level-default: #6b7280; /* Gray 500 */
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  /* Shadows */
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --shadow-button-focus: 0 0 0 3px rgba(16, 185, 129, 0.3);
+
+  /* Dark Mode Overrides (Default Light Mode values) */
+  --dark-color-text-primary: var(--color-text-primary);
+  --dark-color-text-secondary: var(--color-text-secondary);
+  --dark-color-surface: var(--color-surface);
+  --dark-color-background-light: var(--color-background-light);
+  --dark-color-border: var(--color-border);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Mode Variables
+|--------------------------------------------------------------------------
+*/
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #f9fafb; /* Lighter Gray */
+    --color-text-secondary: #9ca3af; /* Medium Gray */
+    --color-surface: #1f2937; /* Darker Gray for main containers */
+    --color-background-light: #374151; /* Medium Dark Gray for cards/inputs */
+    --color-border: #4b5563; /* Medium Gray border */
+
+    /* Error and Recommendation backgrounds are handled individually below for proper color pairing */
+  }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Base Styles
+|--------------------------------------------------------------------------
+*/
+.irrigation-recommendation {
+  padding: 2.5rem 2rem; /* Increased vertical padding */
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh; /* Better visual for a single-page app */
+  background-color: var(--color-background-light); /* Apply base background */
+  color: var(--color-text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.page-header {
+  margin-bottom: 2.5rem;
+}
+
+.page-header h1 {
+  font-size: 2.75rem; /* Slightly larger */
+  font-weight: 800; /* Bolder font weight */
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+}
+
+.recommendation-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Input & Form Styles
+|--------------------------------------------------------------------------
+*/
+.input-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-base);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s;
+}
+
+.crop-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+}
+
+.crop-input {
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: var(--color-background-light);
+  color: var(--color-text-primary);
+}
+
+.crop-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-button-focus);
+}
+
+.crop-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.check-button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem; /* Slightly larger text */
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  box-shadow: var(--shadow-base);
+}
+
+.check-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary-darker));
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); /* Stronger hover shadow */
+}
+
+.check-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-base);
+}
+
+.check-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.spinner {
+  /* ... (spinner styles remain mostly the same) ... */
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 3px solid rgba(255, 255, 255, 0.3); /* Slightly thicker border */
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Error Message Styles
+|--------------------------------------------------------------------------
+*/
+.error-message {
+  background: #fef2f2; /* Light Red */
+  border: 1px solid #fecaca; /* Red Border */
+  color: #7f1d1d; /* Dark Red Text */
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error-message {
+    background: #450a0a; /* Dark Red Background */
+    border-color: #7f1d1d; /* Slightly Lighter Dark Red Border */
+    color: #fca5a5; /* Light Red Text */
+  }
+  .error-message h3 {
+    color: #fca5a5;
+  }
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.error-message h3 {
+  color: #dc2626;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Results Section Styles
+|--------------------------------------------------------------------------
+*/
+.results-section {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-base);
+  border: 1px solid var(--color-border);
+  transition: all 0.3s;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.result-header h2 {
+  font-size: 2rem; /* Increased size */
+  font-weight: 700;
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+}
+
+.irrigation-level-badge {
+  padding: 0.6rem 1.25rem; /* Slightly larger padding */
+  border-radius: 2rem;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem; /* Slightly larger text */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: var(--shadow-base);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Recommendation Cards
+|--------------------------------------------------------------------------
+*/
+.recommendation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Min width reduced for flexibility */
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.recommendation-card {
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-base);
+}
+
+.recommendation-card:hover {
+  transform: translateY(-3px); /* More pronounced lift */
+  box-shadow: var(--shadow-hover);
+}
+
+.recommendation-card.primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5); /* Primary card glow */
+}
+
+/* Primary card color adjustments */
+.recommendation-card.primary .metric-value {
+  color: white;
+}
+
+.recommendation-card.primary .metric-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.recommendation-card.primary .card-content h3 {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.card-icon {
+  font-size: 2.25rem; /* Slightly larger icon */
+  flex-shrink: 0;
+}
+
+.card-content h3 {
+  font-size: 0.85rem;
+  font-weight: 700; /* Bolder label */
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em; /* Increased letter spacing */
+}
+
+.metric-value {
+  font-size: 1.75rem; /* Slightly larger value */
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.metric-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Detailed Analysis & Smart Recommendations
+|--------------------------------------------------------------------------
+*/
+.detailed-analysis {
+  margin-bottom: 2.5rem;
+  padding-top: 1rem;
+}
+
+.detailed-analysis h3,
+.recommendations h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly wider min width */
+  gap: 1rem;
+}
+
+.analysis-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem; /* Increased padding */
+  background: var(--color-background-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.analysis-label {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.analysis-value {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+  font-size: 1rem;
+}
+
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recommendation-item {
+  padding: 1.25rem; /* Increased padding */
+  border-radius: var(--radius-md);
+  border-left: 6px solid; /* Thicker border */
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.2s;
+}
+
+.recommendation-item strong {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Themed Recommendation Items (Light Mode) */
+.recommendation-item.high {
+  border-left-color: var(--color-level-high);
+  background: #fef2f2;
+}
+
+.recommendation-item.medium {
+  border-left-color: var(--color-level-medium);
+  background: #fffbeb;
+}
+
+.recommendation-item.low {
+  border-left-color: var(--color-level-low);
+  background: #f0fdf4;
+}
+
+.recommendation-item.nutrient {
+  border-left-color: #8b5cf6; /* Violet */
+  background: #faf5ff;
+}
+
+.recommendation-item.soil {
+  border-left-color: #06b6d4; /* Cyan */
+  background: #f0f9ff;
+}
+
+/* Themed Recommendation Items (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+  .recommendation-item.high {
+    background: #450a0a; /* Darker Red */
+    color: #fca5a5;
+  }
+
+  .recommendation-item.medium {
+    background: #451a03; /* Darker Amber */
+    color: #fcd34d;
+  }
+
+  .recommendation-item.low {
+    background: #052e16; /* Darker Green */
+    color: #a7f3d0;
+  }
+
+  .recommendation-item.nutrient {
+    background: #2e1065; /* Darker Violet */
+    color: #d8b4fe;
+  }
+
+  .recommendation-item.soil {
+    background: #0c4a6e; /* Darker Cyan */
+    color: #a5f3fc;
+  }
+
+  .recommendation-item strong {
+    color: var(--color-text-primary); /* Maintain contrast */
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mobile Responsiveness
+|--------------------------------------------------------------------------
+*/
+@media (max-width: 768px) {
+  .irrigation-recommendation {
+    padding: 1.5rem 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .input-section,
+  .results-section {
+    padding: 1.5rem;
+  }
+
+  .result-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .recommendation-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analysis-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem; /* Reduced gap */
+    padding: 0.75rem;
+  }
+
+  .analysis-label {
+    font-size: 0.9rem;
+  }
+
+  .analysis-value {
+    font-size: 0.95rem;
+  }
+
+  .recommendation-item {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,154 @@
+.water-tank {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.tank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tank-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.tank-capacity {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.tank-visual {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  height: 120px;
+}
+
+.tank-container {
+  position: relative;
+  width: 60px;
+  height: 100px;
+}
+
+.tank-body {
+  position: relative;
+  width: 100%;
+  height: 90px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--border);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.tank-cap {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 10px;
+  background-color: var(--border);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.tank-water {
+  width: 100%;
+  position: relative;
+  transition: height 0.5s ease;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.water-surface {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+.tank-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90px;
+}
+
+.scale-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.scale-line {
+  width: 8px;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.scale-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  min-width: 30px;
+}
+
+.tank-info {
+  display: flex;
+  justify-content: center;
+}
+
+.tank-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.level-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.level-status {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .tank-visual {
+    height: 100px;
+  }
+
+  .tank-container {
+    width: 50px;
+    height: 80px;
+  }
+
+  .tank-body {
+    height: 70px;
+  }
+
+  .tank-scale {
+    height: 70px;
+  }
+}

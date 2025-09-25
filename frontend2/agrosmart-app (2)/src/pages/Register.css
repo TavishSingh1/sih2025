@@ -1,0 +1,47 @@
+/* Ensure the inputs take up 100% of their parent container (form-group) */
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+  width: 100%; /* Make inputs take up the full width of their container */
+  /* Add box-sizing to ensure padding and border are included in the element's total width and height.
+     This is crucial for width: 100% to work correctly within containers that have padding. */
+  box-sizing: border-box;
+  padding: 10px; /* Example padding, adjust as needed */
+  /* Other input styles (border, background, color) should be here too */
+}
+
+/* Existing styles for form structure */
+.register-content {
+  /* Set a max-width for the entire content area */
+  max-width: 500px;
+  /* Add padding to the register-content area for better spacing */
+  padding: 20px;
+  box-sizing: border-box; /* Crucial for padding not to exceed max-width */
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  /* Ensure this container spans the full width of its parent */
+  width: 100%;
+}
+
+.form-group {
+  /* No width declaration needed here if inputs are 100% and form-row is handling the column layout */
+  margin-bottom: 1rem; /* Add spacing between rows */
+}
+
+
+/* Media query for smaller screens */
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr; /* Stack fields vertically on smaller screens */
+  }
+
+  .register-content {
+    /* Slightly reduce the max-width on smaller screens */
+    max-width: 350px; /* Reduced from 400px to ensure better fit on very small devices */
+    padding: 15px; /* Adjust padding for mobile */
+  }
+}
