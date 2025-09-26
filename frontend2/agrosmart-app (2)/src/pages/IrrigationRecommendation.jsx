@@ -74,7 +74,7 @@ const IrrigationRecommendation = () => {
                 id="cropName"
                 value={cropName}
                 onChange={(e) => setCropName(e.target.value)}
-                placeholder="e.g., rice, wheat, maize, tomato..."
+                placeholder="e.g.,wheat, maize, tomato..."
                 className="crop-input"
                 disabled={loading}
               />

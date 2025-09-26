@@ -1,6 +1,8 @@
+/* Updated irrigation control CSS for better 3x3 matrix and expandable zones */
 .irrigation-control {
   max-width: 1400px;
   margin: 0 auto;
+  padding: var(--spacing-lg);
 }
 
 .irrigation-header {
@@ -8,6 +10,8 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
 }
 
 .irrigation-title h1 {
@@ -28,19 +32,19 @@
   gap: var(--spacing-lg);
 }
 
-.water-usage {
+.system-status {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.usage-label {
+.status-label {
   font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.usage-value {
+.status-value {
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--primary-green);
@@ -85,84 +89,344 @@
   }
 }
 
-.irrigation-grid {
+/* Field container styling matching dashboard */
+.field-container {
+  background: linear-gradient(135deg, #353536 0%, #e2e8f0 100%);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.field-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.field-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  position: relative;
+  z-index: 1;
+}
+
+.field-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.field-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* 3x3 matrix layout for zones */
+.zones-matrix {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
+  position: relative;
+  z-index: 1;
 }
 
-.zone-controls {
-  grid-column: 1 / -1;
+/* Enhanced zone card styling with expansion capability */
+.zone-card {
+  background-color: var(--background);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 120px;
 }
 
-.section-header {
+.zone-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-green);
+}
+
+.zone-card.expanded {
+  grid-column: span 3;
+  min-height: auto;
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary-green);
+  z-index: 10;
+}
+
+.zone-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-green), var(--primary-green-light));
+}
+
+.zone-card.critical::before {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.zone-card.low::before {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.zone-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
-.section-header h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.zone-summary {
-  display: flex;
-  gap: var(--spacing-md);
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.zones-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-md);
-}
-
-.pump-section,
-.flow-monitor,
-.scheduler-section {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-}
-
-.pump-section h3,
-.flow-monitor h3,
-.scheduler-section h3 {
+.zone-header h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.zone-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--success-green);
+}
+
+.zone-status-indicator.active {
+  background-color: var(--warning-yellow);
+  animation: pulse 2s infinite;
+}
+
+.zone-status-indicator.critical {
+  background-color: var(--error-red);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Zone preview for collapsed state */
+.zone-preview {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.zone-card.expanded .zone-preview {
+  display: none;
+}
+
+.sensor-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sensor-preview .sensor-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sensor-preview .sensor-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Expanded content styling */
+.zone-expanded-content {
+  display: block;
+  margin-top: var(--spacing-lg);
+}
+
+.expanded-sensors {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 }
 
-.pumps-grid {
+.sensor-detail {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--surface);
+  border-radius: var(--radius-md);
 }
 
+.sensor-icon {
+  font-size: 1.25rem;
+}
+
+.sensor-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sensor-name {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sensor-reading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sensor-reading.esp-id {
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.sensor-reading.valve-open {
+  color: var(--success-green);
+}
+
+.sensor-reading.valve-closed {
+  color: var(--text-secondary);
+}
+
+/* Red irrigate button styling */
+.irrigate-btn-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: rgb(93, 93, 93);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: var(--spacing-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.irrigate-btn-red:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.irrigate-btn-red:active {
+  transform: translateY(0);
+}
+
+.irrigation-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: rgba(251, 191, 36, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--warning-yellow);
+  font-weight: 600;
+  margin-top: var(--spacing-md);
+}
+
+.irrigation-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--warning-yellow);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.moisture-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--surface);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: var(--spacing-md);
+}
+
+.moisture-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive design for matrix layout */
 @media (max-width: 1024px) {
-  .irrigation-grid {
-    grid-template-columns: 1fr;
+  .zones-matrix {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
   }
 
-  .zones-grid {
+  .zone-card.expanded {
+    grid-column: span 2;
+  }
+
+  .expanded-sensors {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
+  .zones-matrix {
+    grid-template-columns: 1fr;
+  }
+
+  .zone-card.expanded {
+    grid-column: span 1;
+  }
+
   .irrigation-header {
     flex-direction: column;
-    gap: var(--spacing-md);
     align-items: stretch;
   }
 
   .irrigation-actions {
-    justify-content: space-between;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .irrigation-control {
+    padding: var(--spacing-md);
+  }
+
+  .field-container {
+    padding: var(--spacing-lg);
   }
 }
