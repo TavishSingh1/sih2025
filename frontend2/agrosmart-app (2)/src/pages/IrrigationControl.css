@@ -1,432 +1,719 @@
-/* Updated irrigation control CSS for better 3x3 matrix and expandable zones */
-.irrigation-control {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--spacing-lg);
+/* =========================================================================
+   BASE STYLES & LAYOUT
+   ========================================================================= */
+
+:root {
+    --color-dark-bg: #1e1e2d;
+    --color-card-bg: #27293d;
+    --color-header-bg: #202231;
+    --color-primary-green: #00d27a;
+    --color-secondary-blue: #00a8cc;
+    --color-text-light: #f3f3f3;
+    --color-text-dim: #999;
+
+    --status-excellent: #20c997; /* Green */
+    --status-good: #4caf50;      /* Less bright Green */
+    --status-low: #ffc107;       /* Yellow */
+    --status-critical: #dc3545;  /* Red */
+    --status-unknown: #6c757d;   /* Gray */
+    --status-active: #ff8500;    /* Orange/Amber for irrigation */
+
+    --border-radius: 12px;
 }
+
+body {
+    background-color: var(--color-dark-bg);
+    color: var(--color-text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.irrigation-control {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* =========================================================================
+   HEADER & STATS
+   ========================================================================= */
 
 .irrigation-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-xl);
-  flex-wrap: wrap;
-  gap: var(--spacing-lg);
+    background: var(--color-header-bg);
+    padding: 25px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.irrigation-title h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-xs);
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
 }
 
-.irrigation-title p {
-  color: var(--text-secondary);
-  font-size: 1rem;
+.irrigation-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
+.title-icon {
+    color: var(--color-primary-green);
+    font-size: 2.2rem;
+}
+
+.main-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.main-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-dim);
+    margin: 0;
+}
+
+/* --- Stats Cards --- */
+
+.system-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-card {
+    background-color: var(--color-card-bg);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    font-size: 1.8rem;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* --- Header Actions --- */
 .irrigation-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
 }
 
 .system-status {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+    font-size: 0.9rem;
+    color: var(--color-text-dim);
 }
 
-.status-label {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
 }
 
-.status-value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--primary-green);
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--status-unknown); /* Default/Offline */
+    transition: background-color 0.3s;
 }
 
+.status-dot.active {
+    background-color: var(--color-primary-green);
+    box-shadow: 0 0 5px var(--color-primary-green);
+}
+
+
+/* --- Emergency Button --- */
 .btn-emergency {
-  background-color: var(--error);
-  color: white;
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--status-critical);
+    color: var(--color-text-light);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
 .btn-emergency:hover:not(:disabled) {
-  background-color: #dc2626;
-  transform: translateY(-1px);
+    background-color: #f84f60;
 }
 
-.btn-emergency:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
+.btn-emergency:disabled,
 .emergency-active {
-  animation: pulse-red 1s infinite;
+    background-color: #8c2a36;
+    cursor: not-allowed;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
 }
 
-@keyframes pulse-red {
-  0%,
-  100% {
-    background-color: var(--error);
-  }
-  50% {
-    background-color: #dc2626;
-  }
+.btn-emergency svg {
+    color: var(--color-text-light);
 }
 
-/* Field container styling matching dashboard */
+
+/* =========================================================================
+   FIELD MATRIX
+   ========================================================================= */
+
 .field-container {
-  background: linear-gradient(135deg, #353536 0%, #e2e8f0 100%);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-xl);
-  position: relative;
-  overflow: hidden;
-}
-
-.field-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
-  pointer-events: none;
+    padding: 0 10px;
 }
 
 .field-header {
-  text-align: center;
-  margin-bottom: var(--spacing-xl);
-  position: relative;
-  z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-.field-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
+.field-main-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
 }
 
 .field-subtitle {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+    color: var(--color-text-dim);
+    margin: 0;
+    font-size: 0.9rem;
 }
 
-/* 3x3 matrix layout for zones */
+.field-legend {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-text-dim);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+}
+
+.legend-color.critical { background-color: var(--status-critical); }
+.legend-color.low { background-color: var(--status-low); }
+.legend-color.good { background-color: var(--status-good); }
+.legend-color.excellent { background-color: var(--status-excellent); }
+
+
+/* --- Zone Grid --- */
+
 .zones-matrix {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-lg);
-  position: relative;
-  z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
-/* Enhanced zone card styling with expansion capability */
+/* =========================================================================
+   ZONE CARD
+   ========================================================================= */
+
 .zone-card {
-  background-color: var(--background);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  min-height: 120px;
+    background: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 180px; /* Base height for preview state */
+    position: relative;
+    overflow: hidden;
 }
 
 .zone-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  border-color: var(--primary-green);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .zone-card.expanded {
-  grid-column: span 3;
-  min-height: auto;
-  transform: scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  border-color: var(--primary-green);
-  z-index: 10;
+    /* For expanded state, usually keep it in place */
+    transform: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-.zone-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-green), var(--primary-green-light));
-}
+/* --- Color Coding for Status --- */
 
-.zone-card.critical::before {
-  background: linear-gradient(90deg, #ef4444, #f87171);
-}
+.zone-card.critical { border-left: 5px solid var(--status-critical); }
+.zone-card.low { border-left: 5px solid var(--status-low); }
+.zone-card.good { border-left: 5px solid var(--status-good); }
+.zone-card.excellent { border-left: 5px solid var(--status-excellent); }
+.zone-card.unavailable { border-left: 5px solid var(--status-unknown); }
+.zone-card.active { border-left: 5px solid var(--status-active); }
+.zone-card.emergency { border-left: 5px solid var(--status-critical); }
 
-.zone-card.low::before {
-  background: linear-gradient(90deg, #f59e0b, #fbbf24);
-}
+/* --- Header --- */
 
 .zone-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.zone-header h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-primary);
+.zone-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crop-icon {
+    font-size: 1.5rem;
+}
+
+.zone-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
 }
 
 .zone-status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--success-green);
+    display: flex;
+    align-items: center;
+    height: 20px; /* To center the dot/spinner */
 }
 
-.zone-status-indicator.active {
-  background-color: var(--warning-yellow);
-  animation: pulse 2s infinite;
+.zone-status-indicator .status-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--status-unknown);
 }
 
-.zone-status-indicator.critical {
-  background-color: var(--error-red);
-  animation: pulse 2s infinite;
+.zone-status-indicator.active .status-dot {
+    background-color: var(--status-active);
+}
+
+.pulse-ring {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--status-active);
+    position: absolute;
+    animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+    0% {
+        transform: scale(0.6);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(2.0);
+        opacity: 0;
+    }
 }
 
-/* Zone preview for collapsed state */
+/* --- Preview Data --- */
+
 .zone-preview {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--spacing-md);
-}
-
-.zone-card.expanded .zone-preview {
-  display: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0;
+    flex-grow: 1; /* Pushes the moisture bar down */
 }
 
 .sensor-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #31334b;
+    padding: 8px 12px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 0;
 }
 
-.sensor-preview .sensor-value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
+.sensor-preview .sensor-icon {
+    font-size: 1.2rem;
+    color: var(--color-secondary-blue);
 }
 
-.sensor-preview .sensor-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.sensor-data {
+    display: flex;
+    flex-direction: column;
 }
 
-/* Expanded content styling */
-.zone-expanded-content {
-  display: block;
-  margin-top: var(--spacing-lg);
+.sensor-value {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
 }
 
-.expanded-sensors {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+.sensor-label {
+    font-size: 0.75rem;
+    color: var(--color-text-dim);
+    white-space: nowrap;
 }
 
-.sensor-detail {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  background-color: var(--surface);
-  border-radius: var(--radius-md);
+/* --- Unavailable/Error State --- */
+
+.zone-unavailable-message {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--status-unknown);
+    font-style: italic;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.sensor-icon {
-  font-size: 1.25rem;
-}
-
-.sensor-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.sensor-name {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.sensor-reading {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.sensor-reading.esp-id {
-  font-family: monospace;
-  font-size: 0.75rem;
-}
-
-.sensor-reading.valve-open {
-  color: var(--success-green);
-}
-
-.sensor-reading.valve-closed {
-  color: var(--text-secondary);
-}
-
-/* Red irrigate button styling */
-.irrigate-btn-red {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: rgb(93, 93, 93);
-  border: none;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  margin-top: var(--spacing-md);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-}
-
-.irrigate-btn-red:hover {
-  background: linear-gradient(135deg, #dc2626, #b91c1c);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
-}
-
-.irrigate-btn-red:active {
-  transform: translateY(0);
-}
-
-.irrigation-active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background-color: rgba(251, 191, 36, 0.1);
-  border-radius: var(--radius-md);
-  color: var(--warning-yellow);
-  font-weight: 600;
-  margin-top: var(--spacing-md);
-}
-
-.irrigation-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid var(--warning-yellow);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+/* --- Moisture Bar --- */
 
 .moisture-bar {
-  width: 100%;
-  height: 6px;
-  background-color: var(--surface);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-top: var(--spacing-md);
+    height: 25px;
+    background-color: #31334b;
+    border-radius: 5px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .moisture-fill {
-  height: 100%;
-  transition: width 0.3s ease;
-  border-radius: var(--radius-sm);
+    height: 100%;
+    background-color: var(--status-good);
+    transition: width 0.5s ease-out, background-color 0.3s;
+    position: relative;
 }
 
-/* Responsive design for matrix layout */
+.moisture-fill.critical { background-color: var(--status-critical); }
+.moisture-fill.low { background-color: var(--status-low); }
+.moisture-fill.good { background-color: var(--status-good); }
+.moisture-fill.excellent { background-color: var(--status-excellent); }
+.moisture-fill.unknown { background-color: var(--status-unknown); } /* Should be minimal or 0 width */
+
+.moisture-shine {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0.6;
+}
+
+.moisture-percentage {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    font-weight: 700;
+    z-index: 10;
+    color: var(--color-text-light);
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================================================
+   EXPANDED CONTENT
+   ========================================================================= */
+
+.zone-expanded-content {
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.expanded-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expanded-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-secondary-blue);
+    margin: 0;
+}
+
+.esp-badge {
+    background-color: #3b3e5a;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.esp-icon {
+    font-size: 1rem;
+    color: var(--color-primary-green);
+}
+
+/* --- Sensor Grid (Detailed) --- */
+
+.sensor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.sensor-detail {
+    background-color: #31334b;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sensor-detail .sensor-icon {
+    font-size: 1.5rem;
+    color: var(--color-secondary-blue);
+}
+
+.sensor-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.sensor-detail .sensor-name {
+    font-size: 0.8rem;
+    color: var(--color-text-dim);
+}
+
+.sensor-detail .sensor-reading {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.sensor-trend {
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+/* --- Zone Info & Valve Status --- */
+
+.zone-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.crop-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crop-icon-large {
+    font-size: 1.8rem;
+}
+
+.crop-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
+}
+
+.last-watered {
+    font-size: 0.8rem;
+    color: var(--color-text-dim);
+    display: block;
+}
+
+.valve-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.valve-label {
+    color: var(--color-text-dim);
+    font-size: 0.8rem;
+}
+
+.valve-indicator.open {
+    color: var(--status-excellent);
+    font-weight: 700;
+}
+
+.valve-indicator.closed {
+    color: var(--status-critical);
+    font-weight: 700;
+}
+
+/* --- Controls --- */
+
+.zone-controls {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0 0;
+}
+
+.irrigate-btn-red {
+    background-color: var(--status-critical);
+    color: var(--color-text-light);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+}
+
+.irrigate-btn-red:hover {
+    background-color: #c82333;
+}
+
+.irrigation-active {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--status-active);
+    background-color: #3b3e5a;
+    padding: 10px 20px;
+    border-radius: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
+.irrigation-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid var(--status-active);
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+}
+
+.emergency-status {
+    background-color: #4f343a;
+    color: var(--status-critical);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* =========================================================================
+   MEDIA QUERIES
+   ========================================================================= */
+
 @media (max-width: 1024px) {
-  .zones-matrix {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md);
-  }
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-  .zone-card.expanded {
-    grid-column: span 2;
-  }
-
-  .expanded-sensors {
-    grid-template-columns: 1fr;
-  }
+    .irrigation-actions {
+        align-items: flex-start;
+    }
 }
 
 @media (max-width: 768px) {
-  .zones-matrix {
-    grid-template-columns: 1fr;
-  }
+    .system-overview {
+        grid-template-columns: 1fr;
+    }
 
-  .zone-card.expanded {
-    grid-column: span 1;
-  }
-
-  .irrigation-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .irrigation-actions {
-    justify-content: center;
-  }
+    .field-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .field-legend {
+        flex-wrap: wrap;
+        gap: 10px 20px;
+    }
 }
 
 @media (max-width: 480px) {
-  .irrigation-control {
-    padding: var(--spacing-md);
-  }
+    .irrigation-header {
+        padding: 15px;
+    }
 
-  .field-container {
-    padding: var(--spacing-lg);
-  }
+    .main-title {
+        font-size: 1.5rem;
+    }
+
+    .zone-preview {
+        flex-direction: column;
+    }
+
+    .sensor-grid {
+        grid-template-columns: 1fr;
+    }
 }
